@@ -43,7 +43,11 @@ public final class QueryBuilder {
                 "WHERE id = :id {{inNetworkClause}} AND name LIKE %:name% " +
                 "ORDER BY name ASC";
 
-        InClauseExpression inNetworkClause = new InClauseExpression("test", Arrays.asList(1, 2, 3), "AND", 2);
+        InClauseExpression inNetworkClause = InClauseExpression.builder()
+                .withInClauseLimit(2)
+                .withIds(Arrays.asList(1, 2, 3))
+                .withValidation(t -> true)
+                .build("test_field");
 
         System.out.println(builder(sql, inNetworkClause));
     }

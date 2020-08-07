@@ -14,48 +14,17 @@ public class InClauseExpression implements QueryExpression {
 
     public static final int IN_CLAUSE_LIMIT = 1000;
 
-    private final String fieldName;
-    private final List<Integer> ids;
-    private final String prefix;
-    private final Integer inClauseLimit;
-    private final UnaryOperator<Boolean> validation;
+    private String fieldName;
+    private List<Integer> ids;
+    private String prefix = EMPTY;
+    private Integer inClauseLimit = IN_CLAUSE_LIMIT;
+    private UnaryOperator<Boolean> validation;
 
-    public InClauseExpression(String fieldName, List<Integer> ids, UnaryOperator<Boolean> validation) {
-        this(fieldName, ids, null, validation);
+    private InClauseExpression() {
     }
 
-    public InClauseExpression(String fieldName, List<Integer> ids) {
-        this(fieldName, ids, null, null, IN_CLAUSE_LIMIT);
-    }
-
-    public InClauseExpression(String fieldName, List<Integer> ids, String prefix) {
-        this(fieldName, ids, prefix, null, IN_CLAUSE_LIMIT);
-    }
-
-    public InClauseExpression(String fieldName, List<Integer> ids, String prefix, UnaryOperator<Boolean> validation) {
-        this(fieldName, ids, prefix, validation, IN_CLAUSE_LIMIT);
-    }
-
-    public InClauseExpression(String fieldName, List<Integer> ids, Integer inClauseLimit) {
-        this(fieldName, ids, null, null, inClauseLimit);
-    }
-
-    public InClauseExpression(String fieldName, List<Integer> ids, UnaryOperator<Boolean> validation, Integer inClauseLimit) {
-        this(fieldName, ids, null, validation, inClauseLimit);
-    }
-
-    public InClauseExpression(String fieldName, List<Integer> ids, String prefix, Integer inClauseLimit) {
-        this(fieldName, ids, prefix, null, inClauseLimit);
-    }
-
-    public InClauseExpression(String fieldName, List<Integer> ids, String prefix, UnaryOperator<Boolean> validation, Integer inClauseLimit) {
-        Objects.requireNonNull(fieldName, "'field name' is required.");
-
-        this.fieldName = fieldName;
-        this.ids = ids;
-        this.prefix = StringUtils.trimToEmpty(prefix);
-        this.inClauseLimit = inClauseLimit;
-        this.validation = validation;
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -88,5 +57,37 @@ public class InClauseExpression implements QueryExpression {
         query.append(")");
 
         return query.toString();
+    }
+
+    public static final class Builder {
+
+        private InClauseExpression expression = new InClauseExpression();
+
+        public Builder withIds(List<Integer> ids) {
+            expression.ids = ids;
+            return this;
+        }
+
+        public Builder withPrefix(String prefix) {
+            expression.prefix = prefix;
+            return this;
+        }
+
+        public Builder withValidation(UnaryOperator<Boolean> validation) {
+            expression.validation = validation;
+            return this;
+        }
+
+        public Builder withInClauseLimit(Integer inClauseLimit) {
+            expression.inClauseLimit = inClauseLimit;
+            return this;
+        }
+
+        public InClauseExpression build(String fieldName) {
+            Objects.requireNonNull(fieldName, "'field name' is required.");
+            expression.fieldName = fieldName;
+            return expression;
+        }
+
     }
 }
