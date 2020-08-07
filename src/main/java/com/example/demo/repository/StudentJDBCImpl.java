@@ -19,7 +19,7 @@ public class StudentJDBCImpl implements StudentJDBC {
     @Override
     public QueryResponse<Student> find(Pageable pageable) {
         String sql = "select id, name, age, 3 AS total from student";
-        return (QueryResponse<Student>) jdbc.query(sql, new QueryResponseExtractor(new StudentMapper(), 1));
+        return (QueryResponse<Student>) jdbc.query(sql, new QueryResponseExtractor(new StudentMapper()));
     }
 
 }

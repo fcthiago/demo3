@@ -11,12 +11,10 @@ import java.sql.SQLException;
 public class QueryResponseExtractor<T> implements ResultSetExtractor<QueryResponse<T>> {
 
     private final RowMapper<T> rowMapper;
-    private final int page;
 
-    public QueryResponseExtractor(RowMapper<T> rowMapper, int page) {
+    public QueryResponseExtractor(RowMapper<T> rowMapper) {
         Assert.notNull(rowMapper, "RowMapper is required");
         this.rowMapper = rowMapper;
-        this.page = page;
     }
 
     @Override
@@ -29,8 +27,6 @@ public class QueryResponseExtractor<T> implements ResultSetExtractor<QueryRespon
             queryResponse.setTotal(rs.getInt("total"));
             queryResponse.add(rowMapper.mapRow(rs, rowNum++));
         }
-
-        queryResponse.setPage(page);
 
         return queryResponse;
     }
